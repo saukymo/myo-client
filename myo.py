@@ -299,14 +299,14 @@ class MyoRaw(object):
                 self.on_imu(quat, acc, gyro)
             elif attr == 0x23:
                 #typ, val, xdir = unpack('3B', pay)
-                typ, val, xdir,_,_,_ = unpack('6B', pay)
+                typ, val, xdir, _, _, _ = unpack('6B', pay)
 
                 if typ == 1: # on arm
                     self.on_arm(Arm(val), XDirection(xdir))
                 elif typ == 2: # removed from arm
                     self.on_arm(Arm.UNKNOWN, XDirection.UNKNOWN)
                 elif typ == 3: # pose
-                    self.on_pose(Pose(val))
+                    self.on_pose(Pose(str(val)))
             else:
                 print('data with unknown attr: %02X %s' % (attr, p))
 
