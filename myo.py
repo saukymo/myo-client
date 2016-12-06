@@ -302,7 +302,7 @@ class MyoRaw(object):
                 typ, val, xdir, _, _, _ = unpack('6B', pay)
 
                 if typ == 1: # on arm
-                    self.on_arm(Arm(val), XDirection(xdir))
+                    self.on_arm(Arm(str(val)), XDirection(str(xdir)))
                 elif typ == 2: # removed from arm
                     self.on_arm(Arm.UNKNOWN, XDirection.UNKNOWN)
                 elif typ == 3: # pose

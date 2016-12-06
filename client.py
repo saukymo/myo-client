@@ -1,5 +1,8 @@
+from __future__ import print_function
+
 import myo
 import sys
+import time
 from socketIO_client import SocketIO
 
 
@@ -10,8 +13,8 @@ def register():
     socketIO.emit("register", device_id)
 
 
-def unregister():
-    socketIO.emit("unregister", device_id)
+def deregister():
+    socketIO.emit("deregister", device_id)
 
 
 def send_emg(emg, moving):
@@ -19,7 +22,7 @@ def send_emg(emg, moving):
 
 if __name__ == "__main__":
     socketIO = SocketIO(server_url, 5000)
-    m = MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
+    m = myo.MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
 
     def proc_emg(emg, moving, times=[]):
         print(emg)
@@ -28,12 +31,12 @@ if __name__ == "__main__":
         times.append(time.time())
         if len(times) > 20:
             times.pop(0)
-
+            
+	m.add_emg_handler(send_emg)
     m.add_emg_handler(proc_emg)
     m.connect()
 
-    m.add_arm_handler(lambda arm, xdir: print('arm', arm, 'xdir', xdir))
-    m.add_pose_handler(lambda p: print('pose', p))
+    
 
     try:
         while True:
@@ -42,4 +45,5 @@ if __name__ == "__main__":
         pass
     finally:
         m.disconnect()
+        deregister()
         print()
