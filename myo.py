@@ -10,7 +10,17 @@ import time
 import serial
 from serial.tools.list_ports import comports
 
-from common import *
+# from common import *
+import struct
+
+def pack(fmt, *args):
+    return struct.pack('<' + fmt, *args)
+
+def unpack(fmt, *args):
+    return struct.unpack('<' + fmt, *args)
+
+def text(scr, font, txt, pos, clr=(255,255,255)):
+    scr.blit(font.render(txt, True, clr), pos)
 
 def multichr(ords):
     if sys.version_info[0] >= 3:
