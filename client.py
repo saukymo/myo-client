@@ -22,6 +22,7 @@ def send_emg(emg, moving):
 
 if __name__ == "__main__":
     socketIO = SocketIO(server_url, 5000)
+    register()
     m = myo.MyoRaw(sys.argv[1] if len(sys.argv) >= 2 else None)
 
     def proc_emg(emg, moving, times=[]):
@@ -31,12 +32,10 @@ if __name__ == "__main__":
         times.append(time.time())
         if len(times) > 20:
             times.pop(0)
-            
+
 	m.add_emg_handler(send_emg)
     m.add_emg_handler(proc_emg)
     m.connect()
-
-    
 
     try:
         while True:

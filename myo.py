@@ -193,6 +193,8 @@ class MyoRaw(object):
         self.arm_handlers = []
         self.pose_handlers = []
 
+        self.reconnect = 10
+
     def detect_tty(self):
         for p in comports():
             if re.search(r'PID=2458:0*1', p[2]):
@@ -202,7 +204,12 @@ class MyoRaw(object):
         return None
 
     def run(self, timeout=None):
-        self.bt.recv_packet(timeout)
+        if self.bt.recv_packet(timeout):
+            self.reconnect = 10
+        else:
+            self.reconnect -= 1
+        if self.reconnect == 0:
+            self.connect()
 
     def connect(self):
         ## stop everything from before
