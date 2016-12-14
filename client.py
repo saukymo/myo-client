@@ -94,7 +94,8 @@ if __name__ == "__main__":
 
     try:
         while True:
-            m.run(1)
+            if not m.run(1):
+                m.mc_start_collection()
     except KeyboardInterrupt:
         pass
     finally:
