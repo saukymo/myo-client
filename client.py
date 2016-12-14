@@ -3,6 +3,7 @@ from __future__ import print_function
 import myo
 import sys
 import time
+from collections import Counter, deque
 from socketIO_client import SocketIO
 from classifier import NNClassifier
 
@@ -22,8 +23,8 @@ def send_emg(emg, moving):
 
 
 def alert_pose_handler(pose):
-	print pose
-    socketIO.emit("alert", pose)
+    print(pose)
+    socketIO.emit("alert", {'status':pose==2, 'device_id':device_id})
 
 
 class Myo(myo.MyoRaw):
@@ -33,7 +34,7 @@ class Myo(myo.MyoRaw):
     STABLE = 10
 
     def __init__(self, cls):
-        MyoRaw.__init__(self, None)
+        myo.MyoRaw.__init__(self, None)
         self.cls = cls
 
         self.history = deque([3] * Myo.HIST_LEN, Myo.HIST_LEN)
@@ -53,9 +54,12 @@ class Myo(myo.MyoRaw):
 
         new_pose = self.last_pose
         if self.last_pose is None or (n > Myo.HIST_LEN / 2):
-            self.on_raw_pose(r)
-            new_pose = r
-            alert_pose_handler(r)
+        # print(new_pose, self.last_pose)
+            print(r)
+            if r != self.last_pose:
+                self.on_raw_pose(r)
+                new_pose = r
+        
         self.last_pose = new_pose
 
     def add_raw_pose_handler(self, h):
@@ -74,7 +78,7 @@ class Myo(myo.MyoRaw):
 if __name__ == "__main__":
     socketIO = SocketIO(server_url, 5000)
     register()
-    m = Myo(sys.argv[1] if len(sys.argv) >= 2 else None)
+    m = Myo(NNClassifier())
 
     def proc_emg(emg, moving, times=[]):
         print(emg)
