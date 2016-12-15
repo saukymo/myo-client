@@ -202,7 +202,7 @@ class MyoRaw(object):
         return None
 
     def run(self, timeout=None):
-        return bt.recv_packet(timeout):
+        return self.bt.recv_packet(timeout)
 
 
     def connect(self):
