@@ -40,14 +40,10 @@ class Myo(myo.MyoRaw):
 
         self.history = deque([3] * Myo.HIST_LEN, Myo.HIST_LEN)
         self.history_cnt = Counter(self.history)
-        self.add_emg_handler(self.asyc_emg_handler)
+        self.add_emg_handler(emg_handler)
 
         self.last_pose = 3
         self.pose_handlers = [alert_pose_handler]
-
-    def asyc_emg_handler(self, emg, moving):
-        multiprocessing.Process(target=self.emg_handler, args=(emg, moving)).start()
-    
 
     def emg_handler(self, emg, moving):
         y = self.cls.classify(emg)

@@ -8,7 +8,7 @@ K = 20
 class NNClassifier:
     """A wrapper for sklearn's nearest-neighbor classifier"""
 
-    cluster = 2
+    cluster = 3
     nn = None
 
     def __init__(self):
