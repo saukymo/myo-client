@@ -25,7 +25,7 @@ def send_emg(emg, moving):
 
 def alert_pose_handler(pose):
     print(pose)
-    socketIO.emit("alert", {'status':pose==2, 'device_id':device_id})
+    socketIO.emit("alert", {'status':pose==1, 'device_id':device_id})
 
 
 class Myo(myo.MyoRaw):
@@ -46,7 +46,8 @@ class Myo(myo.MyoRaw):
         self.pose_handlers = [alert_pose_handler]
 
     def asyc_emg_handler(self, emg, moving):
-        multiprocessing.Process(target=worker, args=(emg, moving))
+        multiprocessing.Process(target=self.emg_handler, args=(emg, moving)).start()
+    
 
     def emg_handler(self, emg, moving):
         y = self.cls.classify(emg)

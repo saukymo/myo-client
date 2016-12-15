@@ -1,14 +1,14 @@
 from sklearn import neighbors
 import numpy as np
 
-SUBSAMPLE = 3
+SUBSAMPLE = 2
 K = 20
 
 
 class NNClassifier:
     """A wrapper for sklearn's nearest-neighbor classifier"""
 
-    cluster = 3
+    cluster = 2
     nn = None
 
     def __init__(self):
